@@ -39,6 +39,7 @@ export const validateSignup = [
   body('uen')
   .trim()
   .notEmpty()
+  .isNumeric()
   .withMessage('UEN is required'),
 
   body('contact_number')

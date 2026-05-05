@@ -24,6 +24,11 @@ export const signup = async (req, res, next) => {
     });
   }
 
+  // normalize email to lowercase, UEN to uppercase
+  // trim removes accidental leading/trailing whitespace from form input
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedUen = uen.trim();
+
   //have to use postgres transaction to prevent fragmented user data
   //acquire client from pool for transaction
   const client = await db.connect();
@@ -37,7 +42,7 @@ export const signup = async (req, res, next) => {
       `SELECT email, NULL as uen FROM users WHERE email = $1 
       UNION 
       SELECT NULL as email, uen FROM clients WHERE uen = $2`,
-      [email, uen]
+      [normalizedEmail, normalizedUen]
     );
 
     if (existingData.rows.length > 0) {
@@ -45,7 +50,7 @@ export const signup = async (req, res, next) => {
 
       let isEmailTaken = false;
       for (const row of existingData.rows) {
-        if (row.email === email) {
+        if (row.email === normalizedEmail) {
           isEmailTaken = true;
           break;
         }
@@ -63,7 +68,7 @@ export const signup = async (req, res, next) => {
     // CREATE user, return user data (row)
     const newUser = await client.query(
       'INSERT INTO users (email, hashed_password, role) VALUES ($1, $2, $3) RETURNING *',
-      [email, hashedPassword, 'Client']
+      [normalizedEmail, hashedPassword, 'Client']
     );
 
     const user = newUser.rows[0];
@@ -72,7 +77,7 @@ export const signup = async (req, res, next) => {
     const clientQuery =
       `INSERT INTO clients (user_id, company_name, company_address, uen, contact_number) 
     VALUES ($1, $2, $3, $4, $5)`;
-    const clientValues = [user.id, company_name, company_address, uen, contact_number];
+    const clientValues = [user.id, company_name, company_address, normalizedUen, contact_number];
 
     await client.query(clientQuery, clientValues);
 
@@ -82,7 +87,7 @@ export const signup = async (req, res, next) => {
     const payload = {
       id: user.id,
       email: user.email,
-      role:user.role,
+      role: user.role,
     };
 
     const token = jwt.sign(
@@ -120,10 +125,12 @@ export const login = async (req, res, next) => {
     password,
   } = req.body;
 
+  const normalizedEmail = email.trim().toLowerCase();
+
   try {
 
     //check if user exists - single query can use db.query
-    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    const result = await db.query('SELECT * FROM users WHERE email = $1', [normalizedEmail]);
     const user = result.rows[0];
 
 
@@ -156,7 +163,7 @@ export const login = async (req, res, next) => {
     const token = jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      // {expiresIn: '7d'},
+      {expiresIn: '7d'},
     );
 
     res.status(200).json({
@@ -166,7 +173,7 @@ export const login = async (req, res, next) => {
         user: payload,
       }
     });
-    
+
   } catch (error) {
     next(error);
   }

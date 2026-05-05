@@ -9,6 +9,8 @@ import AddProduct from './pages/AddProduct';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
+import OrderHistory from './pages/OrderHistory';
+import OrderDetail from './pages/OrderDetail';
 
 
 
@@ -33,6 +35,8 @@ export default function App() {
       />
       <Route path="/cart" element={<PrivateRoute requireClient><Cart /></PrivateRoute>} />
       <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
+      <Route path="/orders/history" element={<PrivateRoute><OrderHistory /></PrivateRoute>} />
+      <Route path="/orders/:id" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
     </Routes>
   );
 }
