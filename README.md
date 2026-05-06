@@ -2,6 +2,8 @@
 
 A full-stack B2B e-commerce platform for managing fresh produce (fruits and vegetables) orders. The system supports two roles: **staff** who manage inventory and orders, and **clients** (other businesses) who browse products and place orders.
 
+Visit StayFresh [here](https://stayfreshportal.netlify.app/)
+
 ![An Image of 'STAFF' dashboard](./img/dashboard-final.jpg)
 
 ---
