@@ -2,9 +2,9 @@
 
 A full-stack B2B e-commerce platform for managing fresh produce (fruits and vegetables) orders. The system supports two roles: **staff** who manage inventory and orders, and **clients** (other businesses) who browse products and place orders.
 
-Visit StayFresh [here](https://stayfreshportal.netlify.app/)
+## Visit StayFresh [here](https://stayfreshportal.netlify.app/)
 
-![An Image of 'STAFF' dashboard](./img/dashboard-final.jpg)
+![An Image of 'ADMIN' dashboard](./img/dashboard-final.jpg)
 
 ---
 
@@ -15,7 +15,7 @@ Visit StayFresh [here](https://stayfreshportal.netlify.app/)
 - **Inventory Tracking**: Real-time stock management with purchase price and sale price per product
 - **Shopping Cart**: Clients add products to cart, adjust quantities, and place orders
 - **Order Management**: Full order lifecycle: PLACED → TRANSIT → COMPLETE, with cancellation support
-- **Stock Control**: Stock deduction on order placement; automatic restoration on cancellation (PostgreSQL `FOR UPDATE` locking)
+- **Stock Control**: Atomic stock deduction on order placement; automatic restoration on cancellation (PostgreSQL `FOR UPDATE` locking)
 - **Role-Based Access**: Staff see all data and manage orders; clients see only active products (without purchase prices) and their own orders
 - **Dashboard Stats**: Staff home shows active product count, pending orders, and total orders
 
@@ -241,10 +241,10 @@ Refer to [Wireframes](./docs/wireframes.md)
 Refer to [Attributions](./docs/attributions.md)
 
 ## Next Steps
-
 - Batch tracking
 - Expiry dates
 - Image handling for product images
 - Page for damaged/ spoiled inventory write-offs
 - Password reset (2 endpoints: `/auth/forgot-password` and `/auth/reset-password`)
 - Pagination of product list and order list
+- Address technical debt by migrating commented-out experimental logic to a dedicated reference file.
